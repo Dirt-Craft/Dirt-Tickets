@@ -1,0 +1,18 @@
+[
+    {
+        "modid": "ticketbot-plugin",
+        "name": "TicketBot Plugin",
+        "version": "1.0.0",
+        "description": "Integration with DirtCraft's ticket bot",
+        "url": "https://dirtcraft.net/",
+        "authorList": [
+            "juliann"
+        ],
+        "dependencies": [
+            "spongeapi@7.1.0-SNAPSHOT"
+        ],
+        "requiredMods": [
+            "spongeapi@7.1.0-SNAPSHOT"
+        ]
+    }
+]
