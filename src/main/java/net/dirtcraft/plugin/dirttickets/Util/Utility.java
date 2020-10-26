@@ -1,7 +1,7 @@
-package net.dirtcraft.plugin.ticketbotplugin.Util;
+package net.dirtcraft.plugin.dirttickets.Util;
 
 import net.dirtcraft.discord.spongediscordlib.SpongeDiscordLib;
-import net.dirtcraft.plugin.ticketbotplugin.Data.Ticket;
+import net.dirtcraft.plugin.dirttickets.Data.Ticket;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -21,11 +21,11 @@ public class Utility {
     public static Text getTicketInfo(Ticket ticket) {
         Text.Builder ticketText = Text.builder();
 
-        ticketText.append(Utility.format("&8#&6" + ticket.getId() + "&r " +
-                (ticket.isOpen() ? "&c✗" : "&a✓")));
+        ticketText.append(Utility.format("&6Ticket &8#&7" + ticket.getId() + "&r " +
+                (!ticket.isOpen() ? "&a✓" : "")));
 
         ArrayList<String> hover = new ArrayList<String>() {{
-            add("&7Server&8: &6" + ticket.getServer());
+            add("&7Server&8: &6" + Optional.ofNullable(ticket.getServer()).orElse("N/A"));
             add("&7Ticket ID&8: &6" + ticket.getId());
             add("&7Ticket Level&8: &6" + StringUtils.capitalize(ticket.getLevel()));
             add("&7Username&8: &6" + Optional.ofNullable(ticket.getUsername()).orElse("N/A"));

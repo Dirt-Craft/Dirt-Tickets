@@ -1,7 +1,7 @@
-package net.dirtcraft.plugin.ticketbotplugin;
+package net.dirtcraft.plugin.dirttickets;
 
-import net.dirtcraft.plugin.ticketbotplugin.Commands.CommandRegistry;
-import net.dirtcraft.plugin.ticketbotplugin.Database.Storage;
+import net.dirtcraft.plugin.dirttickets.Commands.CommandRegistry;
+import net.dirtcraft.plugin.dirttickets.Database.Storage;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;

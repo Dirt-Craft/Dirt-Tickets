@@ -1,7 +1,7 @@
-package net.dirtcraft.plugin.ticketbotplugin.Commands;
+package net.dirtcraft.plugin.dirttickets.Commands;
 
-import net.dirtcraft.plugin.ticketbotplugin.Database.Storage;
-import net.dirtcraft.plugin.ticketbotplugin.DirtTickets;
+import net.dirtcraft.plugin.dirttickets.Database.Storage;
+import net.dirtcraft.plugin.dirttickets.DirtTickets;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
@@ -24,11 +24,18 @@ public class CommandRegistry {
         return CommandSpec.builder()
                 .child(this.list(), "list")
                 .child(this.create(), "create")
+                .child(this.info(), "info")
                 .build();
     }
 
     private CommandSpec list() {
         return CommandSpec.builder()
+                .arguments(
+                        GenericArguments.optional(
+                                GenericArguments.requiringPermission(
+                                        GenericArguments.user(Text.of("user")),
+                                        "dirttickets.other")),
+                        GenericArguments.flags().flag("a").buildWith(GenericArguments.none()))
                 .executor(new List(main, storage))
                 .build();
     }
@@ -37,6 +44,13 @@ public class CommandRegistry {
         return CommandSpec.builder()
                 .arguments(GenericArguments.remainingJoinedStrings(Text.of("reason")))
                 .executor(new Create(main, storage))
+                .build();
+    }
+
+    private CommandSpec info() {
+        return CommandSpec.builder()
+                .arguments(GenericArguments.integer(Text.of("id")))
+                .executor(new Info(main, storage))
                 .build();
     }
 

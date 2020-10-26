@@ -1,8 +1,8 @@
-package net.dirtcraft.plugin.ticketbotplugin.Commands;
+package net.dirtcraft.plugin.dirttickets.Commands;
 
-import net.dirtcraft.plugin.ticketbotplugin.Database.Storage;
-import net.dirtcraft.plugin.ticketbotplugin.DirtTickets;
-import net.dirtcraft.plugin.ticketbotplugin.Util.Utility;
+import net.dirtcraft.plugin.dirttickets.Database.Storage;
+import net.dirtcraft.plugin.dirttickets.DirtTickets;
+import net.dirtcraft.plugin.dirttickets.Util.Utility;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -28,6 +28,7 @@ public class Create implements CommandExecutor {
             throw new CommandException(Utility.format("&cOnly a player can create a ticket!"));
         Player player = (Player) source;
 
+        source.sendMessage(Utility.format("&7&oCreating ticket for &6&o" + player.getName() + "&7&o..."));
         Task.builder()
                 .async()
                 .execute(() -> {

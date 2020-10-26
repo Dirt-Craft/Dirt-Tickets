@@ -1,4 +1,4 @@
-package net.dirtcraft.plugin.ticketbotplugin.Data;
+package net.dirtcraft.plugin.dirttickets.Data;
 
 public class Ticket {
 
