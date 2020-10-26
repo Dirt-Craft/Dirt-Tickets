@@ -1,7 +1,6 @@
 package net.dirtcraft.plugin.ticketbotplugin.Database;
 
 import net.dirtcraft.plugin.dirtdatabaselib.DirtDatabaseLib;
-import net.dirtcraft.plugin.ticketbotplugin.TicketBotPlugin;
 import net.dirtcraft.plugin.ticketbotplugin.Data.Ticket;
 import net.dirtcraft.plugin.ticketbotplugin.Util.Utility;
 
@@ -13,104 +12,80 @@ import java.util.ArrayList;
 
 public class Storage {
 
-    private final TicketBotPlugin main;
+    public ArrayList<Ticket> getTickets(String username) {
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        try (Connection connection = getConnection();
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = ?")) {
+            ps.setString(1, username.toLowerCase());
 
-    public Storage(TicketBotPlugin main) {
-        this.main = main;
-    }
-
-    public ArrayList<Ticket> listTickets(String username) {
-        ArrayList<Ticket> ticket = new ArrayList<>();
-        try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = '" + username.toLowerCase() + "'");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-
-                ticket.add(new Ticket(
-                                rs.getInt("id"),
-                                rs.getBoolean("open"),
-                                rs.getString("message"),
-                                rs.getString("username"),
-                                rs.getString("server"),
-                                rs.getString("channel"),
-                                rs.getString("level")));
-
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next())
+                    tickets.add(new Ticket(
+                            rs.getInt("id"),
+                            rs.getBoolean("open"),
+                            rs.getString("message"),
+                            rs.getString("username"),
+                            rs.getString("server"),
+                            rs.getString("channel"),
+                            rs.getString("level")));
             }
-
-            rs.close();
-            ps.close();
-            connection.close();
-
-            return ticket;
 
         } catch (SQLException exception) {
             exception.printStackTrace();
-            return ticket;
         }
+        return tickets;
     }
 
     public int getOpenTickets(String username) {
-        int openTickets = 0;
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = ? AND open = ?")) {
+            ps.setString(1, username.toLowerCase());
+            ps.setBoolean(2, true);
 
-        try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = '" + username.toLowerCase() + "'");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                if (rs.getBoolean("open")) openTickets++;
+            try (ResultSet rs = ps.executeQuery()) {
+                int i = 0;
+                while (rs.next()) i++;
+                return i;
             }
-
-            rs.close();
-            ps.close();
-            connection.close();
 
         } catch (SQLException exception) {
             exception.printStackTrace();
+            return 0;
         }
-        return openTickets;
     }
 
     public void createTicket(String message, String username) {
-        try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO tickets (message, username, server) VALUES ('" + message + "', '" + username + "', '" + Utility.getServerCode() + "')");
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     "INSERT INTO tickets (message, username, server) VALUES (?, ?, ?)")) {
 
-            ps.execute();
+            ps.setString(1, message);
+            ps.setString(2, username);
+            ps.setString(3, Utility.getServerCode());
+            ps.executeUpdate();
 
-            ps.close();
-            connection.close();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
     }
 
     public boolean hasOpenTicket(String username) {
-        boolean result;
 
-        try {
-            Connection connection = getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = '" + username + "'");
-            ResultSet rs = ps.executeQuery();
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE lower(username) = ?")) {
+            ps.setString(1, username.toLowerCase());
 
-            result = rs.next();
-
-            rs.close();
-            ps.close();
-            connection.close();
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
 
         } catch (SQLException exception) {
             exception.printStackTrace();
-            result = false;
+            return false;
         }
-
-        return result;
     }
 
     private Connection getConnection() {
-        return DirtDatabaseLib.getConnection(null, "development", null);
+        return DirtDatabaseLib.getConnection("tickets", null);
     }
 }

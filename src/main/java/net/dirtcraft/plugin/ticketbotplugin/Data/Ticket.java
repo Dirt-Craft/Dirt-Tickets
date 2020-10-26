@@ -23,13 +23,9 @@ public class Ticket {
     public int getId() { return id; }
     public boolean isOpen() { return open; }
     public String getMessage() { return message; }
-    public String getUsername(boolean nullable) {
-        return !nullable && username == null ? "" : username;
-    }
+    public String getUsername() { return username; }
 
-    public String getServer(boolean nullable) {
-        return !nullable && server == null ? "" : server;
-    }
+    public String getServer() { return server; }
 
     public String getChannel() { return channel; }
     public String getLevel() { return level; }
